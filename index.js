@@ -422,6 +422,30 @@ switch (config.get("docker_connection.type")) {
         var docker = new Docker({ host: config.get("docker_connection.host"), port: config.get("docker_connection.port") });
     break;
 
+    case "https":
+        let params = { host: config.get("docker_connection.host"), port: config.get("docker_connection.port") };
+
+        if (config.get("docker_connection.version")) {
+            params.version = config.get("docker_connection.version");
+        }
+
+        if (config.get("docker_connection.tls")) {
+            var sslParams = {};
+            for (var name of ["ca", "cert", "key"]) {
+                var file = config.get("docker_connection.tls." + name);
+                if (file && !fs.existsSync(file)) {
+                    break;
+                }
+                sslParams[name] = fs.readFileSync(file);
+            }
+            if (Object.keys(sslParams).length === 3) {
+                params = Object.assign(params, sslParams);
+            }
+        }
+
+        var docker = new Docker(params);
+    break;
+
     case "socket":
         //Check if the socket is okay
         try{

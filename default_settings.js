@@ -29,7 +29,7 @@ var config = convict({
   docker_connection: {
     type: {
       doc: 'The type of connection to Docker.',
-      format: ['socket', 'http'],
+      format: ['socket', 'http', 'tcp', 'https'],
       default: 'socket'
     },
     path: {
@@ -46,6 +46,28 @@ var config = convict({
       doc: 'Optional. Port on remote docker host',
       format: 'port_or_windows_named_pipe',
       default: undefined
+    },
+    version: {
+      doc: 'Optional, engine version',
+      format: String,
+      default: undefined
+    },
+    tls: {
+      ca: {
+        doc: 'Path to ca.pem',
+        format: String,
+        default: undefined
+      },
+      cert: {
+        doc: 'Path to cert.pem',
+        format: String,
+        default: undefined
+      },
+      key: {
+        doc: 'Path to key.pem',
+        format: String,
+        default: undefined
+      },
     }
   }
 });
